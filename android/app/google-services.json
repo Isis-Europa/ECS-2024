@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "785363671854",
+    "project_id": "stable-device-335608",
+    "storage_bucket": "stable-device-335608.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:785363671854:android:28e2a91a94c8430d1cb8bf",
+        "android_client_info": {
+          "package_name": "com.ecs.geolocation"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCn-A_lzoOZccBzdLImGL-Ns2Jij5FkPoc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
