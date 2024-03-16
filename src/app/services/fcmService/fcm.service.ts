@@ -5,6 +5,7 @@ import { PushNotifications } from '@capacitor/push-notifications';
 import { FCM } from '@capacitor-community/fcm';
 import { GeolocationService } from '../geolocationService/geolocation.service';
 import { Platform } from '@ionic/angular';
+import { LocalNotifications } from '@capacitor/local-notifications';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +20,7 @@ export class FcmService {
     await PushNotifications.addListener('registration', token => {
       alert('Registration token: '+ token.value);
       console.log('Registration token: ' + token.value);
+      localStorage.setItem("senderId", token.value)
 
       let topic: string;
       if (Capacitor.getPlatform() === "android") {
@@ -37,8 +39,8 @@ export class FcmService {
     });
 
     await PushNotifications.addListener('pushNotificationReceived', notification => {
-      if (this.geolocation.getDistanceFromLatLonInKm(Number(localStorage.getItem("latitude")), Number(localStorage.getItem("longitude")), Number(notification.data.latitude), Number(notification.data.longitude)) >= 1) {
-        alert('Push notification received data: ' + JSON.stringify(notification.data));
+      if (this.geolocation.getDistanceFromLatLonInKm(Number(localStorage.getItem("latitude")), Number(localStorage.getItem("longitude")), Number(notification.data.latitude), Number(notification.data.longitude)) >= 1 && notification.data.senderId != localStorage.getItem("senderId")) {
+        this.sendLocalNotification()
       }
     });
 
@@ -121,7 +123,8 @@ export class FcmService {
             "topic": "google",
             "data": {
               "latitude": localStorage.getItem("latitude"),
-              "longitude": localStorage.getItem("longitude")
+              "longitude": localStorage.getItem("longitude"),
+              "senderId": localStorage.getItem("senderId")
             }
           }
         }
@@ -137,6 +140,20 @@ export class FcmService {
           complete: () => { console.log("Richiesta Completata") }
         });
       });
+
+  }
+
+  async sendLocalNotification() {
+
+    await LocalNotifications.schedule({
+      notifications: [
+        {
+          id: 1,
+          title: "SOS - Geolocation",
+          body: "Qualcuno ha richiesto il tuo aiuto nelle vicinanze"
+        }
+      ]
+    })
 
   }
 }
