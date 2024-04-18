@@ -20,7 +20,7 @@ export class FcmService {
     await PushNotifications.addListener('registration', token => {
       alert('Registration token: '+ token.value);
       console.log('Registration token: ' + token.value);
-      localStorage.setItem("senderId", token.value)
+      localStorage.setItem("senderId", token.value);
 
       let topic: string;
       if (Capacitor.getPlatform() === "android") {
@@ -30,8 +30,14 @@ export class FcmService {
       }
 
       FCM.subscribeTo({ topic })
-        .then(res => console.log(`Utente registrato al topic: ${topic}`))
-        .catch(err => console.log(`C'è stato un errore nell'iscrizione al topic: ${topic}`))
+        .then(res => {
+          console.log(`Utente registrato al topic: ${topic}`)
+          alert(`Utente registrato al topic: ${topic}`)
+        })
+        .catch(err => {
+          console.log(`C'è stato un errore nell'iscrizione al topic: ${topic}`)
+          alert(`C'è stato un errore nell'iscrizione al topic: ${topic}`)
+        })
     });
 
     await PushNotifications.addListener('registrationError', err => {
@@ -39,12 +45,13 @@ export class FcmService {
     });
 
     await PushNotifications.addListener('pushNotificationReceived', notification => {
-      if (this.geolocation.getDistanceFromLatLonInKm(Number(localStorage.getItem("latitude")), Number(localStorage.getItem("longitude")), Number(notification.data.latitude), Number(notification.data.longitude)) >= 1 && notification.data.senderId != localStorage.getItem("senderId")) {
-        this.sendLocalNotification()
-      }
+      alert("Nuova notifica")
     });
 
     await PushNotifications.addListener('pushNotificationActionPerformed', notification => {
+      if (this.geolocation.getDistanceFromLatLonInKm(Number(localStorage.getItem("latitude")), Number(localStorage.getItem("longitude")), Number(notification.notification.data.latitude), Number(notification.notification.data.latitude)) >= 1 && notification.notification.data.senderId != localStorage.getItem("senderId")) {
+        alert("Sei vicino all'emergenza")
+      }
       alert('Push notification performed data: '+ JSON.stringify(notification.notification.data));
     });
   }
@@ -101,33 +108,32 @@ export class FcmService {
         })
 
 
-        // let json = {
-        //   "message": {
-        //     "topic": "google",
-        //     "android": {
-        //       "content_available": true,
-        //       "notification": {
-        //         "title": "SOS - Geolocation",
-        //         "body": "Qualcuno ha richiesto il tuo intervento clicca e visualizza la sua posizione!"
-        //       },
-        //       "data": {
-        //         "latitude": localStorage.getItem("latitude"),
-        //         "longitude": localStorage.getItem("longitude")
-        //       }
-        //     }
-        //   }
-        // }
-
         let json = {
           "message": {
             "topic": "google",
-            "data": {
-              "latitude": localStorage.getItem("latitude"),
-              "longitude": localStorage.getItem("longitude"),
-              "senderId": localStorage.getItem("senderId")
+            "android": {
+              "notification": {
+                "title": "SOS - Geolocation",
+                "body": "Qualcuno ha richiesto il tuo intervento clicca e visualizza la sua posizione!"
+              },
+              "data": {
+                "latitude": localStorage.getItem("latitude"),
+                "longitude": localStorage.getItem("longitude")
+              }
             }
           }
         }
+
+        // let json = {
+        //   "message": {
+        //     "topic": "google",
+        //     "data": {
+        //       "latitude": localStorage.getItem("latitude"),
+        //       "longitude": localStorage.getItem("longitude"),
+        //       "senderId": localStorage.getItem("senderId")
+        //     }
+        //   }
+        // }
 
         // Richiesta per la notifica
         this.http.post("https://fcm.googleapis.com/v1/projects/stable-device-335608/messages:send", json, { headers: headers_firebase }).subscribe({
