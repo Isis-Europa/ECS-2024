@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Geolocation
+      ECS - Emergency
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -10,7 +10,15 @@
 
   <ion-button (click)="geolocation.getCurrentLocation()">Enable Geolocation</ion-button>
 
-  <h2></h2>
+  <h2>Caricamento coordinate...</h2>
+
+  <iframe
+    [src]='"https://www.openstreetmap.org/export/embed.html?bbox="+this.fcm.mapPosition.longitude+","+this.fcm.mapPosition.latitude+","+this.fcm.mapPosition.mapRadius[1]+","+this.fcm.mapPosition.mapRadius[0]+"&layer=mapnik&marker="+this.fcm.mapPosition.latitude+","+this.fcm.mapPosition.longitude+"" | safe'
+    style="border: 1px solid black"></iframe>
+  <br>
+  <small>
+    <a href="https://www.openstreetmap.org/?mlat=40.89530&amp;mlon=14.34783#map=17/40.89530/14.34783">Visualizza mappa ingrandita</a>
+  </small>
 
   <ion-button (click)="fcm.registerPushNotifications()">Register</ion-button>
   <ion-button (click)="fcm.unregisterPushNotification()">Unregister</ion-button>

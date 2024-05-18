@@ -2,7 +2,7 @@ import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'com.ecs.geolocation',
-  appName: 'Geolocation',
+  appName: 'ECS Emergency',
   webDir: './www',
   server: {
     androidScheme: 'https'

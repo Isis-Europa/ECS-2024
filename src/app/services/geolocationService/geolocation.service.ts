@@ -9,9 +9,11 @@ import { FcmService } from '../fcmService/fcm.service';
 export class GeolocationService {
 
   constructor() { 
+    // Quando il service viene chiamato controlla la posizione
     this.watchLocation()
   }
 
+  // Funzione per il controllo della posizione
   async watchLocation() {
     const options: PositionOptions = {
       enableHighAccuracy: true
@@ -33,6 +35,7 @@ export class GeolocationService {
       })
   }
 
+  // Controllo permessi posizione
   async checkPermissions() {
     try {
       const permissionStatus = await Geolocation.checkPermissions();
@@ -61,13 +64,17 @@ export class GeolocationService {
     }
   }
 
+  // Prende la posizione attuale
   async getCurrentLocation() {
+    // Controllo permessi
     if (await this.checkPermissions() === "ok_Permissions") {
       let options: PositionOptions = {
         enableHighAccuracy: true
       };
 
+      // Prendere la posizione
       const position = await Geolocation.getCurrentPosition(options);
+      // Quando aggiorni la posizione, cambia anche il testo
       let prova = document.querySelector("h2")
       prova!.textContent = "Latitudine: " + position.coords.latitude + "\n Longitudine: " + position.coords.longitude;
       
@@ -75,10 +82,12 @@ export class GeolocationService {
       localStorage.setItem("latitude", String(position.coords.latitude))
       localStorage.setItem("longitude", String(position.coords.longitude))
     } else {
+      // Se i permessi mancano vai alle impostazioni
       this.openSettings();
     }
   }
 
+  // Funzione per aprire le impostazioni del telefono
   openSettings(app = false) {
     console.log("aprendo le impostazioni...")
     return NativeSettings.open({
@@ -87,6 +96,7 @@ export class GeolocationService {
     });
   }
 
+  // Funzione per calcolare il range di km tra due coordinate
   getDistanceFromLatLonInKm(lat1: number, lon1: number, lat2: number, lon2: number) {
     var R = 6371; // Radius of the earth in kilometers
     var dLat = this.deg2rad(lat2 - lat1); // deg2rad below
@@ -100,6 +110,7 @@ export class GeolocationService {
     return km;
   }
 
+  // Funzione aggiuntiva per il calcolo del range
   deg2rad(deg: number) {
     return deg * (Math.PI / 180)
   }

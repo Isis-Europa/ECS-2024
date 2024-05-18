@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { HomePage } from './home.page';
 
 import { HomePageRoutingModule } from './home-routing.module';
-import { LocationAccuracy } from '@awesome-cordova-plugins/location-accuracy';
+import { SafePipe } from './home.pipe';
 
 
 @NgModule({
@@ -15,6 +15,6 @@ import { LocationAccuracy } from '@awesome-cordova-plugins/location-accuracy';
     IonicModule,
     HomePageRoutingModule
   ],
-  declarations: [HomePage],
+  declarations: [HomePage, SafePipe],
 })
 export class HomePageModule {}

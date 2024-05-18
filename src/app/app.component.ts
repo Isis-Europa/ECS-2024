@@ -17,6 +17,7 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.currentUrl = this.location.path()
 
+    // Quando l'app viene caricata, avvia chiama i due service
     this.fcm;
     this.geolocation;
   }

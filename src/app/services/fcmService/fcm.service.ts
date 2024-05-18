@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, OnInit } from '@angular/core';
 import { Capacitor } from '@capacitor/core';
-import { PushNotifications } from '@capacitor/push-notifications';
+import { DeliveredNotifications, PushNotifications } from '@capacitor/push-notifications';
 import { FCM } from '@capacitor-community/fcm';
 import { GeolocationService } from '../geolocationService/geolocation.service';
 import { Platform } from '@ionic/angular';
@@ -10,25 +10,43 @@ import { LocalNotifications } from '@capacitor/local-notifications';
 @Injectable({
   providedIn: 'root'
 })
+
+// Service Notifiche
 export class FcmService {
 
+  mapPosition = {
+    "latitude": localStorage.getItem("latitude"),
+    "longitude": localStorage.getItem("longitude"),
+    "mapRadius": [localStorage.getItem("latitude"), localStorage.getItem("longitude")]
+  }
+
   constructor(private http: HttpClient, public geolocation: GeolocationService, public platform: Platform) {
+    // Attiva i listeners quando viene chiamato il service
     this.addListeners()
+
+    console.log(this.mapPosition)
   }
   
-  addListeners = async () => {
+  async addListeners() {
+
+    // Registra token per le notifiche
     await PushNotifications.addListener('registration', token => {
       alert('Registration token: '+ token.value);
       console.log('Registration token: ' + token.value);
+
+      // Salva il token nel localstorage
       localStorage.setItem("senderId", token.value);
 
       let topic: string;
+      // Se la piattaforma dove è situata l'app è android setta il topic google
       if (Capacitor.getPlatform() === "android") {
         topic = 'google'
       } else {
+        // Altrimenti setta not-registered
         topic = "not-registered"
       }
 
+      // Setta il topic
       FCM.subscribeTo({ topic })
         .then(res => {
           console.log(`Utente registrato al topic: ${topic}`)
@@ -40,22 +58,42 @@ export class FcmService {
         })
     });
 
+    // Listener per gli errori nella registrazione del token
     await PushNotifications.addListener('registrationError', err => {
       alert('Registration error: '+ err.error);
     });
 
+    // Listener per quando arriva una notifica
     await PushNotifications.addListener('pushNotificationReceived', notification => {
+      if (notification.data.senderId == localStorage.getItem("senderId")) {
+        
+      }
       alert("Nuova notifica")
     });
 
+    // Listener che controlla quando la notifica che è arrivata viene cliccata
     await PushNotifications.addListener('pushNotificationActionPerformed', notification => {
+      // Controllo se la notifica rientra nel range di km e se la richiesta è stata mandata dallo stesso telefono
       if (this.geolocation.getDistanceFromLatLonInKm(Number(localStorage.getItem("latitude")), Number(localStorage.getItem("longitude")), Number(notification.notification.data.latitude), Number(notification.notification.data.latitude)) >= 1 && notification.notification.data.senderId != localStorage.getItem("senderId")) {
         alert("Sei vicino all'emergenza")
+
+        this.mapPosition = {
+          "latitude": notification.notification.data.latitude,
+          "longitude": notification.notification.data.longitude,
+          "mapRadius": [String(((notification.notification.data.latitude * 0.01620335656627)/100)), String(((notification.notification.data.longitude *0.08902387934646)/100))]
+        }
+
+        // Per la mappa
+        // document.getElementById('iframe_map')?.setAttribute("src", "https://www.openstreetmap.org/export/embed.html?bbox="+ this.longitude +"," + this.latitude +"," + this.longitude +","+ this.latitude +";layer=mapnik;marker="+ this.latitude +","+ this.longitude +"")
+
+        // localStorage.setItem("lastNotificationPerformedLatitude", notification.notification.data.latitude)
+        // localStorage.setItem("lastNotificationPerformedLongitude", notification.notification.data.longitude)
       }
       alert('Push notification performed data: '+ JSON.stringify(notification.notification.data));
     });
   }
 
+  // Funzione per controllare se si hanno i permessi per le notifiche e registrazione del token
   async registerPushNotifications() {
     let permStatus = await PushNotifications.checkPermissions();
     alert(JSON.stringify(permStatus))
@@ -78,6 +116,7 @@ export class FcmService {
 
   }
 
+  // Funzione per annullare il token registrato precedentemente
   async unregisterPushNotification() {
     await PushNotifications.unregister().then((token) => alert("Unregistered Token: "+token))
   }
@@ -87,6 +126,12 @@ export class FcmService {
     alert('delivered notifications '+ JSON.stringify(notificationList));
   }
 
+  // async removeDeliveredNotifications(delivered: DeliveredNotifications): Promise<void> {
+  //   // Implement the logic to remove the specified notifications
+  //   // For example, you might remove the notification from the displayed list
+  // }
+
+  // Funzione per inviare una notifica
   async sendNotification() {
 
     // Header per l'access token
@@ -108,6 +153,7 @@ export class FcmService {
         })
 
 
+        // Contenuto e tipo della notifica
         let json = {
           "message": {
             "topic": "google",
@@ -135,7 +181,7 @@ export class FcmService {
         //   }
         // }
 
-        // Richiesta per la notifica
+        // Richiesta a Firebase Cloud Messaging di invio della notifica
         this.http.post("https://fcm.googleapis.com/v1/projects/stable-device-335608/messages:send", json, { headers: headers_firebase }).subscribe({
           next: (data) => {
             console.log(JSON.stringify(data))
@@ -149,6 +195,7 @@ export class FcmService {
 
   }
 
+  // Notifica in locale
   async sendLocalNotification() {
 
     await LocalNotifications.schedule({

@@ -25,3 +25,10 @@
 #container a {
   text-decoration: none;
 }
+
+ion-content {
+  iframe {
+    width: 100%; 
+    height: 40vh;
+  }
+}
