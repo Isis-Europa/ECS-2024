@@ -1,0 +1,27 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      ECS - Emergency | Home
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-row>
+
+    <button id="sos-button" [disabled]="sosButtonDisabled">SOS</button>
+    <ion-alert
+      trigger="sos-button"
+      header="Attenzione!"
+      subHeader="Stai per inviare una richiesta di SOS"
+      message="Sei sicuro di volerla inviare? Sarà possibile richiedere un nuovo SOS dopo 5 minuti dalla sua attivazione."
+      [buttons]="sosAlertPopup">
+    </ion-alert>
+    
+    <h6 id="sos-button-countdown" [hidden]="!sosButtonDisabled">
+      Bottone disattivato per <span>{{ minutes || "0" }}</span>:<span>{{ seconds | number: '2.0' }}</span> minuti
+    </h6>
+  </ion-row>
+
+</ion-content>

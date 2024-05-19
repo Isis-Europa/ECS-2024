@@ -1,0 +1,42 @@
+ion-content {
+  width: 100%;
+  height: 100vh;
+
+  ion-row {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  #sos-button {
+    outline: none;
+    width: 150px;
+    height: 150px;
+    margin-top: 30px;
+    border: none;
+    border-radius: 100px;
+    background-color: red;
+    color: white;
+    font-size: 2em;
+    font-weight: bold;
+    border: 5px solid pink;
+    box-shadow: 0 0 5px gray;
+
+    &:hover {
+      box-shadow: 0 0 10px black;
+    }
+
+    &:disabled {
+      background-color: gray;
+    }
+  }
+
+  #sos-button-countdown {
+    font-size: 2.5vh;
+    color: #808080;
+  }
+}

@@ -6,6 +6,7 @@ import { FCM } from '@capacitor-community/fcm';
 import { GeolocationService } from '../geolocationService/geolocation.service';
 import { Platform } from '@ionic/angular';
 import { LocalNotifications } from '@capacitor/local-notifications';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,7 @@ export class FcmService {
     "mapRadius": [localStorage.getItem("latitude"), localStorage.getItem("longitude")]
   }
 
-  constructor(private http: HttpClient, public geolocation: GeolocationService, public platform: Platform) {
+  constructor(private http: HttpClient, public geolocation: GeolocationService, public platform: Platform, public router: Router) {
     // Attiva i listeners quando viene chiamato il service
     this.addListeners()
 
@@ -82,6 +83,8 @@ export class FcmService {
           "longitude": notification.notification.data.longitude,
           "mapRadius": [String(((notification.notification.data.latitude * 0.01620335656627)/100)), String(((notification.notification.data.longitude *0.08902387934646)/100))]
         }
+
+        this.router.navigate(["/map-sos"])
 
         // Per la mappa
         // document.getElementById('iframe_map')?.setAttribute("src", "https://www.openstreetmap.org/export/embed.html?bbox="+ this.longitude +"," + this.latitude +"," + this.longitude +","+ this.latitude +";layer=mapnik;marker="+ this.latitude +","+ this.longitude +"")

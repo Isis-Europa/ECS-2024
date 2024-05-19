@@ -1,0 +1,17 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>ECS - Emergency | Emergenze</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <!-- <capacitor-google-map #map></capacitor-google-map>-->
+
+  <iframe
+    [src]='"https://www.openstreetmap.org/export/embed.html?bbox="+this.fcm.mapPosition.longitude+","+this.fcm.mapPosition.latitude+","+this.fcm.mapPosition.longitude+","+this.fcm.mapPosition.latitude+"&layer=mapnik&marker="+this.fcm.mapPosition.latitude+","+this.fcm.mapPosition.longitude+"" | safe'
+    style="border: 1px solid black"></iframe>
+
+  <ion-row>
+    <ion-button (click)="openMapApplication()">Raggiungi l'Emergenza</ion-button>
+  </ion-row>
+</ion-content>

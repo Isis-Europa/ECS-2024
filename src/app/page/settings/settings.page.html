@@ -1,0 +1,15 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>ECS - Emergency | Impostazioni</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-row>
+    <h4>Caricamento coordinate...</h4>
+    <ion-button (click)="geolocation.getCurrentLocation()">Attiva Geolocalizzazione</ion-button>
+    <ion-button (click)="fcm.registerPushNotifications()">Attiva Notifiche</ion-button>
+    <ion-button (click)="fcm.unregisterPushNotification()">Disattiva Notifiche</ion-button>
+    <ion-button (click)="fcm.getDeliveredNotifications()">Notifiche Ricevute Attive</ion-button>
+  </ion-row>
+</ion-content>
