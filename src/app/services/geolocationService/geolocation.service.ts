@@ -8,6 +8,9 @@ import { FcmService } from '../fcmService/fcm.service';
 })
 export class GeolocationService {
 
+  latitude: string;
+  longitude: string;
+
   constructor() { 
     // Quando il service viene chiamato controlla la posizione
     this.watchLocation()
@@ -58,7 +61,7 @@ export class GeolocationService {
         await this.openSettings()
       }
       console.log(e);
-      let prova = document.querySelector("h2")
+      let prova = document.querySelector("#coordinates-text")
       prova!.textContent = e
       return "error_Permissions"
     }
@@ -75,7 +78,7 @@ export class GeolocationService {
       // Prendere la posizione
       const position = await Geolocation.getCurrentPosition(options);
       // Quando aggiorni la posizione, cambia anche il testo
-      let prova = document.querySelector("h2")
+      let prova = document.querySelector("#coordinates-text")
       prova!.textContent = "Latitudine: " + position.coords.latitude + "\n Longitudine: " + position.coords.longitude;
       
       // Salvare nel localsotrage le ultime coordinate

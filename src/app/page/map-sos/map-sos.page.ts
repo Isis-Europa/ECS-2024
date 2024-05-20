@@ -1,9 +1,7 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { GoogleMap } from '@capacitor/google-maps';
-import { Platform } from '@ionic/angular';
 import { FcmService } from 'src/app/services/fcmService/fcm.service';
 import { environment } from 'src/environments/environment';
-import { StartNavigation } from "@proteansoftware/capacitor-start-navigation";
 
 @Component({
   selector: 'app-map-sos',
@@ -56,13 +54,12 @@ export class MapSosPage {
   //   console.log("marker")
   // }
 
+  // Funzione per aprire un'app di navigaione per raggiungere l'emergenza segnalata
   openMapApplication(): void {
-    StartNavigation.launchMapsApp({
-      latitude: this.fcm.mapPosition.latitude,
-      longitude: this.fcm.mapPosition.longitude,
-      name: "Posizione Emergenza",
-      travelMode: "driving"
-    })
+
+    window.open("geo:0,0?q=" + this.fcm.mapPosition.latitude + "," + this.fcm.mapPosition.longitude +"", "_system");
+
+    console.log("aprendo google maps")
   }
 
 }

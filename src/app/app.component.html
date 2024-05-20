@@ -5,14 +5,14 @@
     </div>
   </ion-content>
 
-  <ion-tabs *ngIf="this.currentUrl != '/auth'">
+  <ion-tabs> <!-- *ngIf="this.currentUrl != '/auth'" -->
     <ion-tab-bar slot="bottom">
 
-      <ion-tab-button routerLink="/map-sos" (click)="changeActivedTab('auth-tab-icon')"><ion-icon id="auth-tab-icon" name="play-circle" size="small"></ion-icon>Emergenze</ion-tab-button>
+      <ion-tab-button id="tab-button-1" routerLink="/map-sos" (click)="changeActivedTab('auth-tab-icon')"><ion-icon id="auth-tab-icon" name="play-circle" size="small"></ion-icon>Emergenze</ion-tab-button>
 
-      <ion-tab-button class="active-tab" routerLink="/" (click)="changeActivedTab('home-tab-icon')"><ion-icon id="home-tab-icon" name="alert-circle-outline" size="normal"></ion-icon>SOS</ion-tab-button>
+      <ion-tab-button id="tab-button-2" class="active-tab" routerLink="/" (click)="changeActivedTab('home-tab-icon')"><ion-icon id="home-tab-icon" name="alert-circle-outline" size="normal"></ion-icon>SOS</ion-tab-button>
 
-      <ion-tab-button routerLink="/settings" (click)="changeActivedTab('settings-tab-icon')"><ion-icon id="settings-tab-icon" name="settings-outline" size="small"></ion-icon >Impostazioni</ion-tab-button>
+      <ion-tab-button id="tab-button-3" routerLink="/settings" (click)="changeActivedTab('settings-tab-icon')"><ion-icon id="settings-tab-icon" name="settings-outline" size="small"></ion-icon >Impostazioni</ion-tab-button>
       
     </ion-tab-bar>
   </ion-tabs>

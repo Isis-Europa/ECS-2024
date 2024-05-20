@@ -10,16 +10,21 @@ import { Location } from '@angular/common';
 })
 export class AppComponent implements OnInit {
 
-  currentUrl: string;
+  // currentUrl: string;
   
   constructor(public fcm: FcmService, public geolocation: GeolocationService, private location: Location) {}
 
   ngOnInit(): void {
-    this.currentUrl = this.location.path()
+    // this.currentUrl = this.location.path()
 
     // Quando l'app viene caricata, avvia chiama i due service
+    // Service Fcm per attivare i listeners
     this.fcm;
+    // Service Geolocation per controllare i permessi e attivare la geolocalizzazione
     this.geolocation;
+
+    // Controllo permessi notifiche
+    this.fcm.registerPushNotifications()
   }
 
   changeActivedTab(tabName: string) {

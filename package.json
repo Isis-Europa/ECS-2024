@@ -43,7 +43,6 @@
     "@ionic/angular": "^7.0.0",
     "@ionic/angular-server": "^7.7.4",
     "@nguniversal/express-engine": "^7.0.2",
-    "@proteansoftware/capacitor-start-navigation": "^5.0.0",
     "capacitor-native-settings": "^5.0.1",
     "cordova-plugin-request-location-accuracy": "^2.3.0",
     "express": "^4.18.2",

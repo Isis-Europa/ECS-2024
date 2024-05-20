@@ -32,7 +32,7 @@ export class FcmService {
 
     // Registra token per le notifiche
     await PushNotifications.addListener('registration', token => {
-      alert('Registration token: '+ token.value);
+      // alert('Registration token: '+ token.value);
       console.log('Registration token: ' + token.value);
 
       // Salva il token nel localstorage
@@ -50,18 +50,18 @@ export class FcmService {
       // Setta il topic
       FCM.subscribeTo({ topic })
         .then(res => {
-          console.log(`Utente registrato al topic: ${topic}`)
-          alert(`Utente registrato al topic: ${topic}`)
+          console.log(`Utente registrato al topic: ${topic} | Risultato: ${res}`)
+          alert("Notifiche attivate con successo!")
         })
         .catch(err => {
           console.log(`C'è stato un errore nell'iscrizione al topic: ${topic}`)
-          alert(`C'è stato un errore nell'iscrizione al topic: ${topic}`)
+          alert(`C'è stato un errore nell'iscrizione al topic delle notifiche: ${topic} | Errore: ${err}`)
         })
     });
 
     // Listener per gli errori nella registrazione del token
     await PushNotifications.addListener('registrationError', err => {
-      alert('Registration error: '+ err.error);
+      alert('C\'è stato un errore nella registrazione | Errore: '+ err.error);
     });
 
     // Listener per quando arriva una notifica
@@ -69,14 +69,14 @@ export class FcmService {
       if (notification.data.senderId == localStorage.getItem("senderId")) {
         
       }
-      alert("Nuova notifica")
+      // alert("Nuova notifica")
     });
 
     // Listener che controlla quando la notifica che è arrivata viene cliccata
     await PushNotifications.addListener('pushNotificationActionPerformed', notification => {
       // Controllo se la notifica rientra nel range di km e se la richiesta è stata mandata dallo stesso telefono
       if (this.geolocation.getDistanceFromLatLonInKm(Number(localStorage.getItem("latitude")), Number(localStorage.getItem("longitude")), Number(notification.notification.data.latitude), Number(notification.notification.data.latitude)) >= 1 && notification.notification.data.senderId != localStorage.getItem("senderId")) {
-        alert("Sei vicino all'emergenza")
+        // alert("Sei vicino all'emergenza")
 
         this.mapPosition = {
           "latitude": notification.notification.data.latitude,
@@ -86,20 +86,27 @@ export class FcmService {
 
         this.router.navigate(["/map-sos"])
 
+        document.querySelector("#tab-button-1")?.classList.add("active-tab")
+        document.querySelector("#tab-button-2")?.classList.remove("active-tab")
+        document.querySelector("#tab-button-3")?.classList.remove("active-tab")
+
         // Per la mappa
         // document.getElementById('iframe_map')?.setAttribute("src", "https://www.openstreetmap.org/export/embed.html?bbox="+ this.longitude +"," + this.latitude +"," + this.longitude +","+ this.latitude +";layer=mapnik;marker="+ this.latitude +","+ this.longitude +"")
 
         // localStorage.setItem("lastNotificationPerformedLatitude", notification.notification.data.latitude)
         // localStorage.setItem("lastNotificationPerformedLongitude", notification.notification.data.longitude)
+      } else {
+        alert("Grazie di esserti interessato del SOS! Ma la richiesta di emergenza da te visualizzata, non è vicina a te oppure è stata annullata.")
       }
-      alert('Push notification performed data: '+ JSON.stringify(notification.notification.data));
+      // alert('Push notification performed data: '+ JSON.stringify(notification.notification.data));
     });
   }
 
   // Funzione per controllare se si hanno i permessi per le notifiche e registrazione del token
   async registerPushNotifications() {
     let permStatus = await PushNotifications.checkPermissions();
-    alert(JSON.stringify(permStatus))
+    console.log(JSON.stringify(permStatus))
+    // alert(JSON.stringify(permStatus))
 
     if (permStatus.receive === 'prompt') {
       permStatus = await PushNotifications.requestPermissions();
@@ -121,7 +128,7 @@ export class FcmService {
 
   // Funzione per annullare il token registrato precedentemente
   async unregisterPushNotification() {
-    await PushNotifications.unregister().then((token) => alert("Unregistered Token: "+token))
+    await PushNotifications.unregister().then((token) => alert("Iscrizione alle notifiche annullata."))
   }
 
   getDeliveredNotifications = async () => {
