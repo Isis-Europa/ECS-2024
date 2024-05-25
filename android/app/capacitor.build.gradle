@@ -18,7 +18,6 @@ dependencies {
     implementation project(':capacitor-local-notifications')
     implementation project(':capacitor-push-notifications')
     implementation project(':capacitor-status-bar')
-    implementation project(':proteansoftware-capacitor-start-navigation')
     implementation project(':capacitor-native-settings')
     implementation "com.google.android.gms:play-services-location:16.+"
 }

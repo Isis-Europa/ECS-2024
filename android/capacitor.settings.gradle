@@ -29,8 +29,5 @@ project(':capacitor-push-notifications').projectDir = new File('../node_modules/
 include ':capacitor-status-bar'
 project(':capacitor-status-bar').projectDir = new File('../node_modules/@capacitor/status-bar/android')
 
-include ':proteansoftware-capacitor-start-navigation'
-project(':proteansoftware-capacitor-start-navigation').projectDir = new File('../node_modules/@proteansoftware/capacitor-start-navigation/android')
-
 include ':capacitor-native-settings'
 project(':capacitor-native-settings').projectDir = new File('../node_modules/capacitor-native-settings/android')
